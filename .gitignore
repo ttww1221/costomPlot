@@ -1,0 +1,52 @@
+# Qt Creator 用户配置
+*.pro.user
+*.pro.user.*
+*.creator.user*
+*.creator.user.*
+*.autosave
+*.session
+
+# 编译输出（影子构建目录）
+*-build-*
+*-Debug*
+*-Release*
+build-*
+debug/
+release/
+*.o
+*.obj
+*.exe
+*.dll
+*.so
+*.dylib
+*.a
+*.lib
+
+# 临时文件
+*.autosave
+*.tmp
+*.swp
+*~
+
+# 依赖文件（如 qmake 生成的 Makefile）
+Makefile*
+*.moc
+moc_*.cpp
+ui_*.h
+qrc_*.cpp
+rcc_*.cpp
+
+# Visual Studio 等编辑器
+*.vcxproj*
+*.sln
+*.suo
+*.user
+*.opensdf
+*.sdf
+*.ipch
+*.pdb
+*.ilk
+
+# 其他
+.DS_Store
+Thumbs.db
