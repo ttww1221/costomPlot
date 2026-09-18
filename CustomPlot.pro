@@ -3,9 +3,11 @@
 # 构建环境 : Qt 6.8.3 (MSVC2022 64bit) / C++17
 # 模块划分 : core(核心逻辑) / utils(工具) / ui(界面) 三个 .pri
 # 功能阶段 : S1 骨架+串口收发 / S2 协议解析 / S3 波形 / S4 控制 / S5 闭环
+#            S6 数据持久化+历史回放 / S7 统计分析
+#            S8 SQLite 数据库 + 登录鉴权 + 角色权限 + 阈值报警
 # ============================================================
 
-QT += widgets serialport   # widgets: GUI界面; serialport: 串口通信模块
+QT += widgets serialport sql   # widgets: GUI界面; serialport: 串口; sql: SQLite 用户/审计/报警库
 
 CONFIG += c++17
 
@@ -23,7 +25,7 @@ msvc: QMAKE_CXXFLAGS += /utf-8
 
 SOURCES += src/app/main.cpp
 
-include(CustomPlot/3rdparty/qcustomplot/3rdparty.pri)
+include(3rdparty/qcustomplot/3rdparty.pri)
 include(src/core/core.pri)
 include(src/utils/utils.pri)
 include(src/ui/ui.pri)
@@ -34,8 +36,3 @@ RESOURCES += resources/resources.qrc
 qnx: target.path = /tmp/$${TARGET}/bin
 else: unix:!android: target.path = /opt/$${TARGET}/bin
 !isEmpty(target.path): INSTALLS += target
-
-DISTFILES += \
-    CustomPlot/3rdparty/qcustomplot/3rdparty.pri
-
-HEADERS +=

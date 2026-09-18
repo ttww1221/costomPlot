@@ -16,11 +16,11 @@
 
 class QCustomPlot;
 class QCheckBox;
-class QPushBotton;
+class QPushButton;
 class QComboBox;
 class QTimer;
 
-class WavePanel : public QWidget
+class WavePanel : public QGroupBox
 {
     Q_OBJECT
 
@@ -43,7 +43,7 @@ private slots:
 private:
     void setupPlot();  //
     void removeOldData();  //
-    double currentkey() const; //
+    double currentKey() const; //
 
     QCustomPlot *m_plot;
     QTimer *m_replotTimer;
@@ -52,8 +52,8 @@ private:
     QCheckBox *m_chkHum;
     QCheckBox *m_chkSetpoint;
     QCheckBox *m_chkAngle;
-    QPushBotton *m_btnPause;
-    QPushBotton *m_btnClear;
+    QPushButton *m_btnPause;
+    QPushButton *m_btnClear;
 
     bool m_paused = false;
     bool m_dirty = false;

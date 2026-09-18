@@ -54,3 +54,50 @@ void AppSettings::saveGeometry(const QByteArray &geometry)
     settings()->setValue(QStringLiteral("window/geometry"), geometry);
     settings()->sync();
 }
+
+AlarmThresholds AppSettings::loadAlarmThresholds()
+{
+    QSettings *s = settings();
+    AlarmThresholds t;   // 结构体默认值即出厂阈值
+
+    // 从未保存过配置时直接返回默认值，避免用 ini 的空值覆盖
+    if (!s->contains(QStringLiteral("alarm/enabled")))
+        return t;
+
+    t.enabled = s->value(QStringLiteral("alarm/enabled"), t.enabled).toBool();
+    t.tempEnabled = s->value(QStringLiteral("alarm/tempEnabled"), t.tempEnabled).toBool();
+    t.tempLow = s->value(QStringLiteral("alarm/tempLow"), t.tempLow).toDouble();
+    t.tempHigh = s->value(QStringLiteral("alarm/tempHigh"), t.tempHigh).toDouble();
+    t.humEnabled = s->value(QStringLiteral("alarm/humEnabled"), t.humEnabled).toBool();
+    t.humLow = s->value(QStringLiteral("alarm/humLow"), t.humLow).toDouble();
+    t.humHigh = s->value(QStringLiteral("alarm/humHigh"), t.humHigh).toDouble();
+    t.debounceFrames = s->value(QStringLiteral("alarm/debounce"), t.debounceFrames).toInt();
+
+    // 配置文件可能被手工改坏（如下限大于上限），此时回退到默认阈值而不是带病运行
+    return t.isValid() ? t : AlarmThresholds();
+}
+
+void AppSettings::saveAlarmThresholds(const AlarmThresholds &t)
+{
+    QSettings *s = settings();
+    s->setValue(QStringLiteral("alarm/enabled"), t.enabled);
+    s->setValue(QStringLiteral("alarm/tempEnabled"), t.tempEnabled);
+    s->setValue(QStringLiteral("alarm/tempLow"), t.tempLow);
+    s->setValue(QStringLiteral("alarm/tempHigh"), t.tempHigh);
+    s->setValue(QStringLiteral("alarm/humEnabled"), t.humEnabled);
+    s->setValue(QStringLiteral("alarm/humLow"), t.humLow);
+    s->setValue(QStringLiteral("alarm/humHigh"), t.humHigh);
+    s->setValue(QStringLiteral("alarm/debounce"), t.debounceFrames);
+    s->sync();
+}
+
+QString AppSettings::loadLastUserName()
+{
+    return settings()->value(QStringLiteral("user/last")).toString();
+}
+
+void AppSettings::saveLastUserName(const QString &username)
+{
+    settings()->setValue(QStringLiteral("user/last"), username);
+    settings()->sync();
+}
