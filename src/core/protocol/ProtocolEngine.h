@@ -66,6 +66,8 @@ public:
 signals:
     // 一帧数据解析成功（CRC 通过）
     void sigFrameParsed(const SensorData &data);
+    // 解析到一条 ACK 应答帧（BB + 指令码 + 参数）
+    void sigAckReceived(quint8 cmd, quint8 param);
     // 统计信息变化（每收到一批字节触发一次）
     void sigStatsChanged(const ProtoStats &stats);
 
@@ -74,13 +76,15 @@ public slots:
     void slotFeed(const QByteArray &data);
 
 private:
-    // 帧同步状态机的 5 个状态
+    // 帧同步状态机的 7 个状态
     enum State {
-        SeekAA,          // 搜索帧头第 1 字节 0xAA
+        SeekAA,          // 搜索帧头第 1 字节 0xAA（或 ACK 帧头 0xBB）
         SeekBB,          // 已找到 0xAA，等待 0xBB
         CollectPayload,  // 收取 9 字节：温度4 + 湿度4 + CRC1
         SeekTail1,       // 等待帧尾 0x0D
-        SeekTail2        // 等待帧尾 0x0A
+        SeekTail2,       // 等待帧尾 0x0A
+        AckCmd,          // ACK：等待指令码字节
+        AckParam         // ACK：等待参数字节
     };
 
     // 处理一条完整候选帧：CRC 校验 + 解析温湿度
@@ -92,6 +96,7 @@ private:
 
     QByteArray m_candidate;  // 当前候选帧缓冲区
     State m_state = SeekAA;  // 当前状态
+    quint8 m_pendingAckCmd = 0; // ACK 解析暂存的指令码
     ProtoStats m_stats;      // 统计信息
 };
 
